@@ -2,49 +2,35 @@
 uplinkDecoder:
   fileName: ts201.js
   examples:
-    - description: 'TS201 Sample: Basic Temperature Reading'
+    - description: TS201 Temperature Sensor Data with Alarm
       input:
-        fPort: 3
-        bytes: [0x03, 0x67, 0x34, 0x01]
+        fPort: 85
+        bytes:
+          - 0x93
+          - 0x67
+          - 0x34
+          - 0x01
+          - 0x64
+          - 0x00
+          - 0x02
       output:
-        temperature: 30.8
-
-    - description: 'TS201 Sample: Temperature with Threshold Alarm Event'
+        data:
+          temperature: 30.8
+          event:
+            - temperature: 30.8
+              temperature_mutation: 10
+              temperature_alarm: mutation alarm
+downlinkEncoder:
+  fileName: ts201-encoder.js
+  examples:
+    - description: Set report interval to 600 minutes
       input:
-        fPort: 3
-        bytes: [0x83, 0x67, 0x34, 0x01, 0x01]
+        data:
+          report_interval: 600
       output:
-        temperature: 30.8
-        event:
-          - temperature: 30.8
-            temperature_alarm: 'Threshold Alarm'
-
-    - description: 'TS201 Sample: Temperature with Mutation Alarm Event'
-      input:
-        fPort: 3
-        bytes: [0x93, 0x67, 0x34, 0x01, 0x64, 0x00, 0x02]
-      output:
-        temperature: 30.8
-        event:
-          - temperature: 30.8
-            temperature_alarm: 'Mutation Alarm'
-            temperature_mutation: 10
-
-    - description: 'TS201 Sample: Temperature Read Error'
-      input:
-        fPort: 3
-        bytes: [0xB3, 0x67, 0x00]
-      output:
-        event:
-          - temperature_error: 'Read Error'
-
-    - description: 'TS201 Sample: Historical Alarm Record'
-      input:
-        fPort: 3
-        bytes: [0x20, 0xCE, 0xC7, 0x9A, 0xFA, 0x64, 0x02, 0xBD, 0xFF]
-      output:
-        history:
-          - event_type: 'Alarm(Threshold or Mutation)'
-            read_status: 'Success'
-            temperature: -6.7
-            timestamp: 1694145223
+        bytes:
+          - 0xFF
+          - 0x8E
+          - 0x00
+          - 0x58
+          - 0x02
